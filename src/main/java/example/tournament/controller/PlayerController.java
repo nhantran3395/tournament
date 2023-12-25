@@ -38,7 +38,7 @@ public class PlayerController {
     }
 
     @PutMapping(path = "/{playerId}/profiles/{profileId}")
-    private ResponseEntity<Void> attachProfile(@PathVariable long playerId, @PathVariable long profileId) throws URISyntaxException {
+    private ResponseEntity<Void> attachProfile(@PathVariable long playerId, @PathVariable long profileId) {
         playerService.attachProfile(playerId, profileId);
         return ResponseEntity.noContent().build();
     }

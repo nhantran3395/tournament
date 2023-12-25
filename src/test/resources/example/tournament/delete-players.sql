@@ -1,3 +1,0 @@
-DELETE
-FROM player
-WHERE id IN (100,101);

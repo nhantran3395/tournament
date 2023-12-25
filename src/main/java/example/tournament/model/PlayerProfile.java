@@ -1,14 +1,11 @@
 package example.tournament.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class PlayerProfile {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
     @Column(unique = true, nullable = false, length = 100)
     private String twitter;

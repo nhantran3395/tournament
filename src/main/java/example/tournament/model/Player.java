@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 @Entity
 public class Player {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
 
     @Column(nullable = false, length = 100)

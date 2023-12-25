@@ -4,10 +4,12 @@ import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import example.tournament.dto.CreatePlayerDto;
 import example.tournament.dto.CreatePlayerProfileDto;
+import example.tournament.dto.CreateTournamentDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +22,10 @@ import java.net.URI;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Import(TestContainersConfiguration.class)
 @TestPropertySource(locations = "classpath:application-test.properties")
-@Sql(scripts = "insert-profiles.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = "insert-players.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = "delete-players.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
-@Sql(scripts = "delete-profiles.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+@Sql(scripts = "insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class TournamentApplicationTests {
     @Autowired
     private TestRestTemplate restTemplate;
@@ -65,7 +66,7 @@ class TournamentApplicationTests {
     }
 
     @Test
-    void shouldGetRequestedPlayer() {
+    void shouldReturnSinglePlayer() {
         ResponseEntity<String> res = restTemplate.getForEntity("/players/100", String.class);
 
         assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -127,5 +128,61 @@ class TournamentApplicationTests {
 
         ResponseEntity<String> getProfileRes = restTemplate.getForEntity("/profiles/100", String.class);
         assertThat(getProfileRes.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    void shouldReturnListOfTournaments() {
+        ResponseEntity<String> res = restTemplate.getForEntity("/tournaments", String.class);
+
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(res.getBody());
+        int count = documentContext.read("$.length()");
+        String tournament1 = documentContext.read("$[0].name");
+        String tournament2 = documentContext.read("$[1].name");
+        String tournament3 = documentContext.read("$[2].name");
+
+        assertThat(count).isEqualTo(3);
+        assertThat(tournament1).isEqualTo("Bank of China Hong Kong Tennis Open");
+        assertThat(tournament2).isEqualTo("Adelaide International");
+        assertThat(tournament3).isEqualTo("ASB Classic");
+    }
+
+    @Test
+    @DirtiesContext
+    void shouldCreateNewTournament() {
+        CreateTournamentDto newTournamentDto = new CreateTournamentDto("Australian Open", "Melbourne, Australia");
+        ResponseEntity<Void> postRes = restTemplate.postForEntity("/tournaments", newTournamentDto, Void.class);
+
+        assertThat(postRes.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        URI savedTournamentLocation = postRes.getHeaders().getLocation();
+        ResponseEntity<String> getRes = restTemplate.getForEntity(savedTournamentLocation, String.class);
+
+        assertThat(getRes.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getRes.getBody());
+        int id = documentContext.read("$.id");
+        String name = documentContext.read("$.name");
+        String location = documentContext.read("$.location");
+
+        assertThat(id).isInstanceOf(Number.class).isNotNull();
+        assertThat(name).isEqualTo("Australian Open");
+        assertThat(location).isEqualTo("Melbourne, Australia");
+    }
+
+    @Test
+    void shouldReturnSingleTournament() {
+        ResponseEntity<String> res = restTemplate.getForEntity("/tournaments/102", String.class);
+
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK);
+        DocumentContext documentContext = JsonPath.parse(res.getBody());
+
+        int id = documentContext.read("$.id");
+        assertThat(id).isEqualTo(102);
+        String name = documentContext.read("$.name");
+        assertThat(name).isEqualTo("ASB Classic");
+        String location = documentContext.read("$.location");
+        assertThat(location).isEqualTo("Auckland, New Zealand");
     }
 }

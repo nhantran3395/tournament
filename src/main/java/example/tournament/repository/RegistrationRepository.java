@@ -1,9 +1,9 @@
 package example.tournament.repository;
 
-import example.tournament.model.Tournament;
+import example.tournament.model.Registration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TournamentRepository extends JpaRepository<Tournament, Long> {
+public interface RegistrationRepository extends JpaRepository<Registration, Long> {
 }

@@ -5,6 +5,7 @@ import com.jayway.jsonpath.JsonPath;
 import example.tournament.dto.CreatePlayerDto;
 import example.tournament.dto.CreatePlayerProfileDto;
 import example.tournament.dto.CreateTournamentDto;
+import net.minidev.json.JSONArray;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -185,4 +186,76 @@ class TournamentApplicationTests {
         String location = documentContext.read("$.location");
         assertThat(location).isEqualTo("Auckland, New Zealand");
     }
+
+    @Test
+    void shouldReturnListOfRegistrations() {
+        ResponseEntity<String> res = restTemplate.getForEntity("/registrations", String.class);
+
+        assertThat(res.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(res.getBody());
+        int count = documentContext.read("$.length()");
+        JSONArray ids = documentContext.read("$..id");
+
+        assertThat(count).isEqualTo(4);
+        assertThat(ids).containsExactlyInAnyOrder(1000, 1001, 1002, 1003);
+    }
+
+    @Test
+    @DirtiesContext
+    void shouldCreateNewRegistration() {
+        ResponseEntity<Void> postRes = restTemplate.postForEntity("/registrations", null, Void.class);
+
+        assertThat(postRes.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        URI savedTournamentLocation = postRes.getHeaders().getLocation();
+        ResponseEntity<String> getRes = restTemplate.getForEntity(savedTournamentLocation, String.class);
+
+        assertThat(getRes.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getRes.getBody());
+        int id = documentContext.read("$.id");
+
+        assertThat(id).isInstanceOf(Number.class).isNotNull();
+    }
+
+    @Test
+    @DirtiesContext
+    void shouldAttachRegistrationToTournament() {
+        ResponseEntity<Void> putRes = restTemplate.exchange("/tournaments/102/registrations/1002", HttpMethod.PUT, null, Void.class);
+        assertThat(putRes.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> getRes = restTemplate.getForEntity("/tournaments/102", String.class);
+        assertThat(getRes.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getRes.getBody());
+
+        int id = documentContext.read("$.id");
+        int registrationId = documentContext.read("$.registrationList[0].id");
+
+        assertThat(id).isEqualTo(102);
+        assertThat(registrationId).isEqualTo(1002);
+    }
+
+    @Test
+    @DirtiesContext
+    void shouldAttachMultipleRegistrationsToOneTournament() {
+        ResponseEntity<Void> putRes1 = restTemplate.exchange("/tournaments/102/registrations/1002", HttpMethod.PUT, null, Void.class);
+        assertThat(putRes1.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<Void> putRes2 = restTemplate.exchange("/tournaments/102/registrations/1003", HttpMethod.PUT, null, Void.class);
+        assertThat(putRes2.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> getRes = restTemplate.getForEntity("/tournaments/102", String.class);
+        assertThat(getRes.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getRes.getBody());
+
+        int id = documentContext.read("$.id");
+        JSONArray registrationIds = documentContext.read("$.registrationList..id");
+
+        assertThat(id).isEqualTo(102);
+        assertThat(registrationIds).containsExactlyInAnyOrder(1002, 1003);
+    }
+
 }

@@ -26,7 +26,7 @@ public class TournamentController {
     @GetMapping(path = "")
     private ResponseEntity<List<Tournament>> getAll() {
         List<Tournament> tournaments = tournamentService.getAll();
-        logger.info("List of tournaments: " + tournaments);
+        logger.info("List of tournaments: {}", tournaments);
         return ResponseEntity.ok(tournaments);
     }
 
@@ -38,6 +38,14 @@ public class TournamentController {
 
     @GetMapping(path = "/{tournamentId}")
     private ResponseEntity<Tournament> get(@PathVariable long tournamentId) {
-        return ResponseEntity.ok(tournamentService.get(tournamentId));
+        Tournament tournament = tournamentService.get(tournamentId);
+        logger.info("Matching tournament: {}", tournament);
+        return ResponseEntity.ok(tournament);
+    }
+
+    @PutMapping(path = "/{tournamentId}/registrations/{registrationId}")
+    private ResponseEntity<Void> attachRegistration(@PathVariable long tournamentId, @PathVariable long registrationId) {
+        tournamentService.attachRegistration(tournamentId, registrationId);
+        return ResponseEntity.noContent().build();
     }
 }

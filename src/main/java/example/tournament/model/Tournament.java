@@ -57,4 +57,14 @@ public class Tournament {
     public void setRegistrationList(List<Registration> registrationList) {
         this.registrationList = registrationList;
     }
+
+    @Override
+    public String toString() {
+        return "Tournament{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", location='" + location + '\'' +
+                ", registrationList=" + registrationList +
+                '}';
+    }
 }

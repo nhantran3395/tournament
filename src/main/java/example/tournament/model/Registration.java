@@ -19,4 +19,10 @@ public class Registration {
         this.id = id;
     }
 
+    @Override
+    public String toString() {
+        return "Registration{" +
+                "id=" + id +
+                '}';
+    }
 }

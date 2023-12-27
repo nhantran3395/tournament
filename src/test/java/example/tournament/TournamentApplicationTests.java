@@ -258,4 +258,18 @@ class TournamentApplicationTests {
         assertThat(registrationIds).containsExactlyInAnyOrder(1002, 1003);
     }
 
+    @Test
+    @DirtiesContext
+    void shouldDeleteTournamentAndAssociatedRegistrations() {
+        ResponseEntity<Void> delRes = restTemplate.exchange("/tournaments/100", HttpMethod.DELETE, null, Void.class);
+        assertThat(delRes.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<Void> getTournamentRes = restTemplate.getForEntity("/tournaments/100", Void.class);
+        ResponseEntity<Void> getRegistrationRes1 = restTemplate.getForEntity("/registrations/1000", Void.class);
+        ResponseEntity<Void> getRegistrationRes2 = restTemplate.getForEntity("/registrations/1001", Void.class);
+
+        assertThat(getTournamentRes.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(getRegistrationRes1.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(getRegistrationRes2.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
 }

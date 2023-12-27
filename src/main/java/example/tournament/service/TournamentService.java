@@ -59,4 +59,9 @@ public class TournamentService {
 
         tournamentRepository.save(tournament);
     }
+
+    public void delete(long tournamentId) {
+        Tournament tournament = get(tournamentId);
+        tournamentRepository.delete(tournament);
+    }
 }

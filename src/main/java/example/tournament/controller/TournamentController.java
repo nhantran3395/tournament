@@ -48,4 +48,10 @@ public class TournamentController {
         tournamentService.attachRegistration(tournamentId, registrationId);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping(path = "/{tournamentId}")
+    private ResponseEntity<Void> delete(@PathVariable long tournamentId) {
+        tournamentService.delete(tournamentId);
+        return ResponseEntity.noContent().build();
+    }
 }

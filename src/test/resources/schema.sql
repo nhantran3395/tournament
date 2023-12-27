@@ -35,11 +35,15 @@ ALTER TABLE tournament
 
 CREATE TABLE registration
 (
-    id            BIGINT    NOT NULL,
+    id            BIGINT NOT NULL,
+    player_id     BIGINT,
+    date          TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     tournament_id BIGINT,
-    date          TIMESTAMP NOT NULL,
     CONSTRAINT pk_registration PRIMARY KEY (id)
 );
+
+ALTER TABLE registration
+    ADD CONSTRAINT FK_REGISTRATION_ON_PLAYER FOREIGN KEY (player_id) REFERENCES player (id);
 
 ALTER TABLE registration
     ADD CONSTRAINT FK_REGISTRATION_ON_TOURNAMENT FOREIGN KEY (tournament_id) REFERENCES tournament (id);

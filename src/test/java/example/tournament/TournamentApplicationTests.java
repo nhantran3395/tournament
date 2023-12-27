@@ -125,6 +125,24 @@ class TournamentApplicationTests {
 
     @Test
     @DirtiesContext
+    void shouldAttachRegistrationToPlayer() {
+        ResponseEntity<Void> putRes = restTemplate.exchange("/players/101/registrations/1003", HttpMethod.PUT, null, Void.class);
+        assertThat(putRes.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> getRes = restTemplate.getForEntity("/players/101", String.class);
+        DocumentContext documentContext = JsonPath.parse(getRes.getBody());
+        int registrationCount = documentContext.read("$.registrations.length()");
+        int registrationId = documentContext.read("$.registrations[0].id");
+        Instant registrationDate = Instant.parse(documentContext.read("$.registrations[0].date"));
+
+        assertThat(getRes.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(registrationCount).isEqualTo(1);
+        assertThat(registrationId).isEqualTo(1003);
+        assertThat(registrationDate).isNotNull();
+    }
+
+    @Test
+    @DirtiesContext
     void shouldDeletePlayerAndAssociatedProfile() {
         ResponseEntity<Void> deleteRes = restTemplate.exchange("/players/100", HttpMethod.DELETE, null, Void.class);
         assertThat(deleteRes.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);

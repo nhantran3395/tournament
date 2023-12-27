@@ -1,14 +1,15 @@
 package example.tournament.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class Player {
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL)
-    private final List<Registration> registrationList = new ArrayList<>();
+    @JsonIgnoreProperties("player")
+    private List<Registration> registrations;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long Id;
@@ -45,11 +46,21 @@ public class Player {
         this.profile = profile;
     }
 
+    public List<Registration> getRegistrations() {
+        return registrations;
+    }
+
+    public void setRegistrations(List<Registration> registrations) {
+        this.registrations = registrations;
+    }
+
     @Override
     public String toString() {
         return "Player{" +
-                "Id=" + Id +
+                "registrations=" + registrations +
+                ", Id=" + Id +
                 ", name='" + name + '\'' +
+                ", profile=" + profile +
                 '}';
     }
 }

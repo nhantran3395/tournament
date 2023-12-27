@@ -1,5 +1,6 @@
 package example.tournament.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -11,6 +12,7 @@ public class Registration {
     private long id;
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
     @JoinColumn(name = "player_id", referencedColumnName = "id")
+    @JsonIgnoreProperties("player")
     private Player player;
     @Column(nullable = false)
     private Instant date;
@@ -50,7 +52,6 @@ public class Registration {
     public String toString() {
         return "Registration{" +
                 "id=" + id +
-                ", player=" + player +
                 ", date=" + date +
                 '}';
     }

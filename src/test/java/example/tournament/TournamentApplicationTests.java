@@ -258,7 +258,7 @@ class TournamentApplicationTests {
         DocumentContext documentContext = JsonPath.parse(getRes.getBody());
 
         int id = documentContext.read("$.id");
-        int registrationId = documentContext.read("$.registrationList[0].id");
+        int registrationId = documentContext.read("$.registrations[0].id");
 
         assertThat(id).isEqualTo(102);
         assertThat(registrationId).isEqualTo(1002);
@@ -279,7 +279,7 @@ class TournamentApplicationTests {
         DocumentContext documentContext = JsonPath.parse(getRes.getBody());
 
         int id = documentContext.read("$.id");
-        JSONArray registrationIds = documentContext.read("$.registrationList..id");
+        JSONArray registrationIds = documentContext.read("$.registrations..id");
 
         assertThat(id).isEqualTo(102);
         assertThat(registrationIds).containsExactlyInAnyOrder(1002, 1003);

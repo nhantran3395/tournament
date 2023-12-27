@@ -16,7 +16,7 @@ public class Tournament {
     private String location;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "tournament_id", referencedColumnName = "id")
-    private List<Registration> registrationList = new ArrayList<>();
+    private List<Registration> registrations = new ArrayList<>();
 
     public Tournament() {
     }
@@ -50,12 +50,12 @@ public class Tournament {
         this.location = location;
     }
 
-    public List<Registration> getRegistrationList() {
-        return registrationList;
+    public List<Registration> getRegistrations() {
+        return registrations;
     }
 
-    public void setRegistrationList(List<Registration> registrationList) {
-        this.registrationList = registrationList;
+    public void setRegistrations(List<Registration> registrations) {
+        this.registrations = registrations;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class Tournament {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", location='" + location + '\'' +
-                ", registrationList=" + registrationList +
+                ", registrations=" + registrations +
                 '}';
     }
 }

@@ -53,9 +53,9 @@ public class TournamentService {
 
         Tournament tournament = tournamentOptional.get();
         Registration registration = registrationOptional.get();
-        List<Registration> registrationList = tournament.getRegistrationList();
+        List<Registration> registrationList = tournament.getRegistrations();
         registrationList.add(registration);
-        tournament.setRegistrationList(registrationList);
+        tournament.setRegistrations(registrationList);
 
         tournamentRepository.save(tournament);
     }

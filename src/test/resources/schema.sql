@@ -35,8 +35,9 @@ ALTER TABLE tournament
 
 CREATE TABLE registration
 (
-    id            BIGINT NOT NULL,
+    id            BIGINT    NOT NULL,
     tournament_id BIGINT,
+    date          TIMESTAMP NOT NULL,
     CONSTRAINT pk_registration PRIMARY KEY (id)
 );
 

@@ -5,8 +5,11 @@ import com.jayway.jsonpath.JsonPath;
 import example.tournament.dto.CreatePlayerDto;
 import example.tournament.dto.CreatePlayerProfileDto;
 import example.tournament.dto.CreateTournamentDto;
+import example.tournament.model.Registration;
 import net.minidev.json.JSONArray;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -19,6 +22,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.net.URI;
+import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,6 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Sql(scripts = "insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class TournamentApplicationTests {
+    private final static Logger logger = LoggerFactory.getLogger(TournamentApplicationTests.class);
     @Autowired
     private TestRestTemplate restTemplate;
 
@@ -204,7 +209,9 @@ class TournamentApplicationTests {
     @Test
     @DirtiesContext
     void shouldCreateNewRegistration() {
-        ResponseEntity<Void> postRes = restTemplate.postForEntity("/registrations", null, Void.class);
+        Registration registration = new Registration(Instant.now());
+        logger.info("New registration: {}", registration);
+        ResponseEntity<Void> postRes = restTemplate.postForEntity("/registrations", registration, Void.class);
 
         assertThat(postRes.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
@@ -215,8 +222,10 @@ class TournamentApplicationTests {
 
         DocumentContext documentContext = JsonPath.parse(getRes.getBody());
         int id = documentContext.read("$.id");
+        Instant date = Instant.parse(documentContext.read("$.date"));
 
         assertThat(id).isInstanceOf(Number.class).isNotNull();
+        assertThat(date).isInstanceOf(Instant.class).isNotNull();
     }
 
     @Test

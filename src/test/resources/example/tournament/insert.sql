@@ -12,11 +12,11 @@ INSERT INTO tournament(id, name, location)
 VALUES (101, 'Adelaide International', 'Adelaide, Australia');
 INSERT INTO tournament(id, name, location)
 VALUES (102, 'ASB Classic', 'Auckland, New Zealand');
-INSERT INTO registration(id, tournament_id)
-VALUES (1000, 100);
-INSERT INTO registration(id, tournament_id)
-VALUES (1001, 100);
-INSERT INTO registration(id)
-VALUES (1002);
-INSERT INTO registration(id)
-VALUES (1003);
+INSERT INTO registration(id, date, tournament_id)
+VALUES (1000, now(), 100);
+INSERT INTO registration(id, date, tournament_id)
+VALUES (1001, now(), 100);
+INSERT INTO registration(id, date)
+VALUES (1002, now());
+INSERT INTO registration(id, date)
+VALUES (1003, now());

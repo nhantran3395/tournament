@@ -1,5 +1,6 @@
 package example.tournament.service;
 
+import example.tournament.dto.CreateRegistrationDto;
 import example.tournament.exception.NoSuchResourceException;
 import example.tournament.model.Registration;
 import example.tournament.repository.RegistrationRepository;
@@ -20,8 +21,8 @@ public class RegistrationService {
         return registrationRepository.findAll();
     }
 
-    public Registration add() {
-        Registration registration = new Registration();
+    public Registration add(CreateRegistrationDto registrationDto) {
+        Registration registration = new Registration(registrationDto.date());
         return registrationRepository.save(registration);
     }
 

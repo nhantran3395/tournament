@@ -1,5 +1,6 @@
 package example.tournament.controller;
 
+import example.tournament.dto.CreateRegistrationDto;
 import example.tournament.model.Registration;
 import example.tournament.service.RegistrationService;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +25,8 @@ public class RegistrationController {
     }
 
     @PostMapping(path = "")
-    private ResponseEntity<Void> add() throws URISyntaxException {
-        Registration savedRegistration = registrationService.add();
+    private ResponseEntity<Void> add(@RequestBody CreateRegistrationDto registrationDto) throws URISyntaxException {
+        Registration savedRegistration = registrationService.add(registrationDto);
         return ResponseEntity.created(new URI("/registrations/" + savedRegistration.getId())).build();
     }
 

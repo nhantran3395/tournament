@@ -1,8 +1,5 @@
-package example.tournament.controller;
+package example.tournament.player;
 
-import example.tournament.dto.CreatePlayerDto;
-import example.tournament.model.Player;
-import example.tournament.service.PlayerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +26,8 @@ public class PlayerController {
     }
 
     @PostMapping(path = "")
-    private ResponseEntity<Void> addPlayer(@RequestBody CreatePlayerDto newPlayerDto) throws URISyntaxException {
-        Player savedPlayer = playerService.addPlayer(newPlayerDto);
+    private ResponseEntity<Void> addPlayer(@RequestBody CreatePlayerRequest newPlayerRequest) throws URISyntaxException {
+        Player savedPlayer = playerService.addPlayer(newPlayerRequest);
         return ResponseEntity.created(new URI("/players/" + savedPlayer.getId())).build();
     }
 

@@ -1,5 +1,6 @@
-package example.tournament.model;
+package example.tournament.tournament;
 
+import example.tournament.registration.Registration;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;

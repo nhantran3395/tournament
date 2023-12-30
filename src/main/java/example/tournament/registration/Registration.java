@@ -1,6 +1,7 @@
-package example.tournament.model;
+package example.tournament.registration;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import example.tournament.player.Player;
 import jakarta.persistence.*;
 
 import java.time.Instant;

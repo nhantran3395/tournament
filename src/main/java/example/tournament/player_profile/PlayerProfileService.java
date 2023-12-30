@@ -1,9 +1,6 @@
-package example.tournament.service;
+package example.tournament.player_profile;
 
-import example.tournament.dto.CreatePlayerProfileDto;
-import example.tournament.exception.NoSuchResourceException;
-import example.tournament.model.PlayerProfile;
-import example.tournament.repository.PlayerProfileRepository;
+import example.tournament.shared.exception.NoSuchResourceException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,8 +13,8 @@ public class PlayerProfileService {
         this.playerProfileRepository = playerProfileRepository;
     }
 
-    public PlayerProfile addProfile(CreatePlayerProfileDto playerProfileDto) {
-        PlayerProfile newPlayerProfile = new PlayerProfile(playerProfileDto.twitter());
+    public PlayerProfile addProfile(CreatePlayerProfileRequest playerProfileRequest) {
+        PlayerProfile newPlayerProfile = new PlayerProfile(playerProfileRequest.twitter());
         return playerProfileRepository.save(newPlayerProfile);
     }
 

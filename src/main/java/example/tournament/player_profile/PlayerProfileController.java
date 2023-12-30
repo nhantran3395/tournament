@@ -1,8 +1,5 @@
-package example.tournament.controller;
+package example.tournament.player_profile;
 
-import example.tournament.dto.CreatePlayerProfileDto;
-import example.tournament.model.PlayerProfile;
-import example.tournament.service.PlayerProfileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +16,8 @@ public class PlayerProfileController {
     }
 
     @PostMapping(path = "")
-    private ResponseEntity<Void> addProfile(@RequestBody CreatePlayerProfileDto profileDto) throws URISyntaxException {
-        PlayerProfile savedProfile = playerProfileService.addProfile(profileDto);
+    private ResponseEntity<Void> addProfile(@RequestBody CreatePlayerProfileRequest newProfileRequest) throws URISyntaxException {
+        PlayerProfile savedProfile = playerProfileService.addProfile(newProfileRequest);
         return ResponseEntity.created(new URI("/profiles/" + savedProfile.getId())).build();
     }
 

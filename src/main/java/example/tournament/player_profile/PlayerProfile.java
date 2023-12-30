@@ -1,4 +1,4 @@
-package example.tournament.model;
+package example.tournament.player_profile;
 
 import jakarta.persistence.*;
 

@@ -2,10 +2,10 @@ package example.tournament;
 
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-import example.tournament.dto.CreatePlayerDto;
-import example.tournament.dto.CreatePlayerProfileDto;
-import example.tournament.dto.CreateTournamentDto;
-import example.tournament.model.Registration;
+import example.tournament.player.CreatePlayerRequest;
+import example.tournament.player_profile.CreatePlayerProfileRequest;
+import example.tournament.registration.Registration;
+import example.tournament.tournament.CreateTournamentRequest;
 import net.minidev.json.JSONArray;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -55,7 +55,7 @@ class TournamentApplicationTests {
     @Test
     @DirtiesContext
     void shouldCreateNewPlayer() {
-        CreatePlayerDto newPlayerDto = new CreatePlayerDto("Rafael Nadal");
+        CreatePlayerRequest newPlayerDto = new CreatePlayerRequest("Rafael Nadal");
         ResponseEntity<Void> postRes = restTemplate.postForEntity("/players", newPlayerDto, Void.class);
 
         assertThat(postRes.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -87,7 +87,7 @@ class TournamentApplicationTests {
     @Test
     @DirtiesContext
     void shouldCreateNewProfile() {
-        CreatePlayerProfileDto newProfileDto = new CreatePlayerProfileDto("@rafael1");
+        CreatePlayerProfileRequest newProfileDto = new CreatePlayerProfileRequest("@rafael1");
         ResponseEntity<Void> postRes = restTemplate.postForEntity("/profiles", newProfileDto, Void.class);
 
         assertThat(postRes.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -175,7 +175,7 @@ class TournamentApplicationTests {
     @Test
     @DirtiesContext
     void shouldCreateNewTournament() {
-        CreateTournamentDto newTournamentDto = new CreateTournamentDto("Australian Open", "Melbourne, Australia");
+        CreateTournamentRequest newTournamentDto = new CreateTournamentRequest("Australian Open", "Melbourne, Australia");
         ResponseEntity<Void> postRes = restTemplate.postForEntity("/tournaments", newTournamentDto, Void.class);
 
         assertThat(postRes.getStatusCode()).isEqualTo(HttpStatus.CREATED);

@@ -1,4 +1,4 @@
-package example.tournament.exception;
+package example.tournament.shared.exception;
 
 public class NoSuchResourceException extends RuntimeException {
     public NoSuchResourceException() {

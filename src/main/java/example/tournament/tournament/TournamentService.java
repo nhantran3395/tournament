@@ -1,11 +1,8 @@
-package example.tournament.service;
+package example.tournament.tournament;
 
-import example.tournament.dto.CreateTournamentDto;
-import example.tournament.exception.NoSuchResourceException;
-import example.tournament.model.Registration;
-import example.tournament.model.Tournament;
-import example.tournament.repository.RegistrationRepository;
-import example.tournament.repository.TournamentRepository;
+import example.tournament.registration.Registration;
+import example.tournament.registration.RegistrationRepository;
+import example.tournament.shared.exception.NoSuchResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -38,8 +35,8 @@ public class TournamentService {
         return tournamentOptional.get();
     }
 
-    public Tournament add(CreateTournamentDto tournamentDto) {
-        Tournament newTournament = new Tournament(tournamentDto.name(), tournamentDto.location());
+    public Tournament add(CreateTournamentRequest tournamentRequest) {
+        Tournament newTournament = new Tournament(tournamentRequest.name(), tournamentRequest.location());
         return tournamentRepository.save(newTournament);
     }
 

@@ -1,8 +1,5 @@
-package example.tournament.controller;
+package example.tournament.tournament;
 
-import example.tournament.dto.CreateTournamentDto;
-import example.tournament.model.Tournament;
-import example.tournament.service.TournamentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +28,8 @@ public class TournamentController {
     }
 
     @PostMapping(path = "")
-    private ResponseEntity<Void> add(@RequestBody CreateTournamentDto newTournamentDto) throws URISyntaxException {
-        Tournament savedTournament = tournamentService.add(newTournamentDto);
+    private ResponseEntity<Void> add(@RequestBody CreateTournamentRequest newTournamentRequest) throws URISyntaxException {
+        Tournament savedTournament = tournamentService.add(newTournamentRequest);
         return ResponseEntity.created(new URI("/tournaments/" + savedTournament.getId())).build();
     }
 

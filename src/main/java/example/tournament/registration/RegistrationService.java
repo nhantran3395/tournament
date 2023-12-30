@@ -1,9 +1,6 @@
-package example.tournament.service;
+package example.tournament.registration;
 
-import example.tournament.dto.CreateRegistrationDto;
-import example.tournament.exception.NoSuchResourceException;
-import example.tournament.model.Registration;
-import example.tournament.repository.RegistrationRepository;
+import example.tournament.shared.exception.NoSuchResourceException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +18,8 @@ public class RegistrationService {
         return registrationRepository.findAll();
     }
 
-    public Registration add(CreateRegistrationDto registrationDto) {
-        Registration registration = new Registration(registrationDto.date());
+    public Registration add(CreateRegistrationRequest registrationRequest) {
+        Registration registration = new Registration(registrationRequest.date());
         return registrationRepository.save(registration);
     }
 

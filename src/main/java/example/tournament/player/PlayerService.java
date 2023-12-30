@@ -1,13 +1,10 @@
-package example.tournament.service;
+package example.tournament.player;
 
-import example.tournament.dto.CreatePlayerDto;
-import example.tournament.exception.NoSuchResourceException;
-import example.tournament.model.Player;
-import example.tournament.model.PlayerProfile;
-import example.tournament.model.Registration;
-import example.tournament.repository.PlayerProfileRepository;
-import example.tournament.repository.PlayerRepository;
-import example.tournament.repository.RegistrationRepository;
+import example.tournament.player_profile.PlayerProfile;
+import example.tournament.player_profile.PlayerProfileRepository;
+import example.tournament.registration.Registration;
+import example.tournament.registration.RegistrationRepository;
+import example.tournament.shared.exception.NoSuchResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -33,8 +30,8 @@ public class PlayerService {
         return playerRepository.findAll();
     }
 
-    public Player addPlayer(CreatePlayerDto playerDto) {
-        Player player = new Player(playerDto.name());
+    public Player addPlayer(CreatePlayerRequest playerRequest) {
+        Player player = new Player(playerRequest.name());
         return playerRepository.save(player);
     }
 

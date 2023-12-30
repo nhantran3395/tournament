@@ -28,6 +28,11 @@ public class Player {
         this.name = name;
     }
 
+    public Player(long id, String name) {
+        Id = id;
+        this.name = name;
+    }
+
     public String getName() {
         return name;
     }
